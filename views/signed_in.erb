@@ -1,0 +1,12 @@
+<h1>Welcome, <%= username %></h1>
+
+<h1>Contacts</h1>
+
+
+<% contacts = @contact_database.find_for_user(current_user_id) %>
+<% contacts.each do |array| %>
+    <%= p array[:name] + ', ' + array[:email] + '; ' %>
+    <a>
+
+    </a>
+<% end %>

@@ -18,10 +18,51 @@ class ContactsApp < Sinatra::Base
     @contact_database.insert(:name => "Jeff D.", :email => "jd@example.com", user_id: jeff[:id])
     @contact_database.insert(:name => "Mike", :email => "mike@example.com", user_id: jeff[:id])
     @contact_database.insert(:name => "Kirsten", :email => "kirsten@example.com", user_id: hunter[:id])
+
   end
 
   get "/" do
-   erb :signed_out
+    if current_user
+      erb :signed_in, locals: {username: current_user[:username], current_user_id: current_user[:id]}
+
+    else
+      erb :signed_out
+    end
+  end
+
+  post "/sessions" do
+    user = find_user(params)
+    session[:user_id] = user[:id] if user
+    redirect "/"
+  end
+
+
+  private
+
+  def find_user(params)
+    @user_database.all.select { |user|
+      user[:username] == params[:username] && user[:password] == params[:password]
+    }.first
+  end
+
+  def current_user
+    if session[:user_id]
+      @user_database.find(session[:user_id])
+    end
   end
 
 end
+
+
+# def find_user(params)
+#   @user_database.all.select { |user|
+#     user[:username] == params[:username] && user[:password] == params[:password]
+#   }.first
+# end
+#
+# def current_user
+#   if session[:user_id]
+#     @user_database.find(session[:user_id])
+#   end
+# end
+# end

@@ -16,3 +16,16 @@ feature "login" do
     expect(page).to have_content "Password"
   end
 end
+
+feature "login" do
+  scenario "user gets welcomed when they login" do
+  visit "/"
+
+  fill_in "Username", with: "Jeff"
+  fill_in "Password", with: "jeff123"
+
+  click_button "Sign In"
+
+  expect(page).to have_content("Welcome, Jeff")
+  end
+end
